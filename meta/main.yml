@@ -1,0 +1,21 @@
+---
+galaxy_info:
+  role_name: longhorn
+  author: madudka
+  description: distributed block storage system for Kubernetes debian installer
+  company: madudka.dev
+  license: GPL-3.0-only
+  min_ansible_version: 2.16.8
+  platforms:
+    - name: Debian
+      versions:
+        - trixie
+  galaxy_tags:
+    - linux
+    - debian
+    - k8s
+    - k3s
+    - longhorn
+    - storage
+
+dependencies: []

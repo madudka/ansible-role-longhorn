@@ -1,0 +1,6 @@
+---
+- name: Install NFS common package  
+  ansible.builtin.apt:
+    name: nfs-common
+    state: present
+  become: true

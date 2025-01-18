@@ -1,0 +1,6 @@
+---
+- name: Install DMsetup package  
+  ansible.builtin.apt:
+    name: dmsetup
+    state: present
+  become: true

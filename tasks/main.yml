@@ -1,0 +1,24 @@
+---
+- name: Include Helm install
+  ansible.builtin.import_tasks: helm.yml
+  when: "'master' in group_names and inventory_hostname == groups['master'][0]"
+
+- name: Include Kubeconfig export
+  ansible.builtin.import_tasks: kubeconfig.yml
+  when: "'master' in group_names and inventory_hostname == groups['master'][0]"
+
+- name: Include Open-iSCSI install
+  ansible.builtin.import_tasks: open_iscsi.yml
+
+- name: Include NFS common install
+  ansible.builtin.import_tasks: nfs.yml
+
+- name: Include Cryptsetup install
+  ansible.builtin.import_tasks: cryptsetup.yml
+
+- name: Include DMsetup install
+  ansible.builtin.import_tasks: dmsetup.yml
+
+- name: Include Longhorn install
+  ansible.builtin.import_tasks: longhorn.yml
+  when: "'master' in group_names and inventory_hostname == groups['master'][0]"

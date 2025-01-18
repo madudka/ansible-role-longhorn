@@ -1,0 +1,63 @@
+---
+- name: Download Longhorn environment check script
+  ansible.builtin.get_url:
+    url: "{{ longhorn_env_check_url }}"
+    dest: "{{ longhorn_env_check_script_path }}"
+    mode: 0755
+
+- name: Run Longhorn environment check script  
+  ansible.builtin.command:
+    cmd: "{{ longhorn_env_check_script_path }}"
+  register: env_check_output
+  changed_when: false
+  become: true
+
+- name: Print environment check output
+  ansible.builtin.debug:
+    msg: "{{ env_check_output.stdout_lines }}"
+
+- name: Fail if environment check failed
+  ansible.builtin.fail:
+    msg: "Longhorn environment check failed. Please review the output."
+  when: "'[ERROR]' in env_check_output.stdout"
+
+- name: Ensure python3-pip is installed
+  ansible.builtin.apt:
+    name: python3-pip
+    state: present
+  become: true
+
+- name: Install PyYAML module via apt
+  ansible.builtin.apt:
+    name: python3-yaml
+    state: present
+  become: true
+
+- name: Install kubernetes module via apt
+  ansible.builtin.apt:
+    name: python3-kubernetes
+    state: present
+  become: true
+
+- name: Install openshift module via apt
+  ansible.builtin.apt:
+    name: python3-openshift
+    state: present
+  become: true
+
+- name: Add Longhorn Helm repository
+  kubernetes.core.helm_repository:
+    name: longhorn
+    repo_url: "{{ longhorn_repo_url }}"
+
+- name: Update Helm repositories
+  ansible.builtin.command:
+    cmd: helm repo update
+
+- name: Install Longhorn
+  kubernetes.core.helm:
+    name: longhorn
+    chart_ref: longhorn/longhorn
+    release_namespace: longhorn-system
+    create_namespace: true
+    chart_version: "{{ longhorn_chart_version }}"

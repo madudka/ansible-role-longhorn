@@ -1,0 +1,20 @@
+---
+- name: Install open-iscsi package  
+  ansible.builtin.apt:
+    name: open-iscsi
+    state: present
+  become: true
+
+- name: Load iscsi_tcp kernel module  
+  ansible.builtin.command:
+    cmd: modprobe iscsi_tcp
+  register: modprobe_result
+  changed_when: "'iscsi_tcp' not in modprobe_result.stdout"
+  become: true
+
+- name: Ensure iscsid daemon is running and enabled
+  ansible.builtin.service:
+    name: iscsid
+    state: started
+    enabled: true
+  become: true

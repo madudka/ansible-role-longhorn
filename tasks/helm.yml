@@ -1,0 +1,12 @@
+---
+- name: Download Helm installation script
+  ansible.builtin.get_url:
+    url: "{{ helm_install_url }}"
+    dest: "{{ helm_install_script_path }}"
+    mode: 0755
+  become: true
+
+- name: Install Helm
+  ansible.builtin.command:
+    cmd: "{{ helm_install_script_path }}"
+  become: true
